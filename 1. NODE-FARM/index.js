@@ -1,4 +1,4 @@
-const { isUtf8 } = require("buffer");
+const http=require('http');
 const fs=require("fs"); 
 //calling the fs module  "file system module"so that we can read,write etc from the file system  -> require(" ") ->this the the function used for calling the module in node js
 
@@ -19,6 +19,8 @@ console.log("File Written!");
 */
 
 //Non Blocking, Aynchronous way
+
+/* 
 fs.readFile('./txt/start.txt','utf-8',(err,data1)=>{
     if(err) return console.log('ERROR!!')
 
@@ -34,3 +36,16 @@ fs.readFile('./txt/start.txt','utf-8',(err,data1)=>{
 })
 
 console.log("Will read the file");
+
+*/
+
+/////////////////////////////////////////////////////////////////////////////
+//SERVER
+const server =http.createServer((req,res)=>{
+    res.end("Hello from the server!!");
+});
+
+server.listen(8000,'127.0.0.1',()=>{
+    console.log("Listening to request on port 8000");
+});
+
