@@ -1,6 +1,7 @@
 const http=require('http');
 const fs=require("fs"); 
 const url=require("url"); 
+const path = require('path');
 //calling the fs module  "file system module"so that we can read,write etc from the file system  -> require(" ") ->this the the function used for calling the module in node js
 
 
@@ -50,6 +51,13 @@ const server =http.createServer((req,res)=>{
     }
     else if(pathName==='/product'){
      res.end("This is the product");
+    }
+    else if(pathName === '/api'){
+        //reading the api first which is in dev-data
+        fs.readFile(`${__dirname}/dev-data/data.json`,'utf-8',(err,data)=>{ //but yeh method baar baar call hoga jab jab hmm '/api' url pe click karnege so for that hmm sync read karenge -> file ek hi baar read hogi .
+        res.end(data); 
+        })
+
     }
     else{
         res.writeHead(404,{
