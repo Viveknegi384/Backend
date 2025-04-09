@@ -43,6 +43,14 @@ console.log("Will read the file");
 
 /////////////////////////////////////////////////////////////////////////////
 //SERVER
+
+
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');//isse file directly sirf ek hi baar read hogii
+const dataObj = JSON.parse(data);// to convert it into object 
+
+
+
+
 const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."
     const pathName=req.url;
@@ -53,12 +61,11 @@ const server =http.createServer((req,res)=>{
      res.end("This is the product");
     }
     else if(pathName === '/api'){
-        //reading the api first which is in dev-data
-        fs.readFile(`${__dirname}/dev-data/data.json`,'utf-8',(err,data)=>{ //but yeh method baar baar call hoga jab jab hmm '/api' url pe click karnege so for that hmm sync read karenge -> file ek hi baar read hogi .
-        res.end(data); 
+        res.writeHead(200,{
+            'Content-type':'application/json'
         })
-
-    }
+        res.end(data); 
+        }
     else{
         res.writeHead(404,{
             'Content-type' : 'text/html',
