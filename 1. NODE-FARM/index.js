@@ -43,19 +43,37 @@ console.log("Will read the file");
 
 /////////////////////////////////////////////////////////////////////////////
 //SERVER
-
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`,'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`,'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`,'utf-8');
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');//isse file directly sirf ek hi baar read hogii
 const dataObj = JSON.parse(data);// to convert it into object 
 
 
+const replacetemp= (temp,prod)=>{
+    let output=temp.replace(/{%PRODUCTNAME%}/g,prod.productName);  //  ->  /.../g — means global search (replace all occurrences).if we not use this(uses -> '...') then it only replace first reoccurrence
+    output=output.replace(/{%IMAGE%}/g ,prod.image);
+    output=output.replace(/{%FROM%}/g ,prod.from);
+    output=output.replace(/{%QUANTITY%}/g ,prod.quantity);
+    output=output.replace(/{%PRICE%}/g ,prod.price);
+    output=output.replace(/{%NUTRIENTS%}/g ,prod.nutrients);
+    output=output.replace(/{%DESCRIPTION%}/g ,prod.description);
+    output=output.replace(/{%ID%}/g ,prod.id);
 
+    if (!prod.organic) output = output.replace(/{%NOT_ORGANIC%}/g,'not-organic');
+    return output;
+} 
 
 const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."
     const pathName=req.url;
     if(pathName==='/' || pathName==='/overview') {
-        res.end("This is the overview");
+
+        const cardhtml = dataObj.map((el)=> replacetemp(tempCard,el)).join(''); //The join('') part joins all the strings in the array into one big string with no separator (empty string '').
+        const out = tempOverview.replace(/{%PRODUCT_CARDS%}/g,cardhtml);
+
+        res.end(out);
     }
     else if(pathName==='/product'){
      res.end("This is the product");
