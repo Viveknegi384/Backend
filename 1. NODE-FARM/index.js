@@ -3,7 +3,7 @@ const fs=require("fs");
 const url=require("url"); 
 const path = require('path');
 //calling the fs module  "file system module"so that we can read,write etc from the file system  -> require(" ") ->this the the function used for calling the module in node js
-
+const replacetemp=require('./modules/replacetemp');  //isme starting "./ "se hi hogi which indicate the current directory or folder
 
 // const hello="Hello World";
 // console.log(hello);
@@ -51,19 +51,7 @@ const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');//isse f
 const dataObj = JSON.parse(data);// to convert it into object 
 
 
-const replacetemp= (temp,prod)=>{
-    let output=temp.replace(/{%PRODUCTNAME%}/g,prod.productName);  //  ->  /.../g — means global search (replace all occurrences).if we not use this(uses -> '...') then it only replace first reoccurrence
-    output=output.replace(/{%IMAGE%}/g ,prod.image);
-    output=output.replace(/{%FROM%}/g ,prod.from);
-    output=output.replace(/{%QUANTITY%}/g ,prod.quantity);
-    output=output.replace(/{%PRICE%}/g ,prod.price);
-    output=output.replace(/{%NUTRIENTS%}/g ,prod.nutrients);
-    output=output.replace(/{%DESCRIPTION%}/g ,prod.description);
-    output=output.replace(/{%ID%}/g ,prod.id);
 
-    if (!prod.organic) output = output.replace(/{%NOT_ORGANIC%}/g,'not-organic');
-    return output;
-} 
 
 const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."
@@ -71,6 +59,8 @@ const server =http.createServer((req,res)=>{
     // console.log(url.parse(req.url,true));
     // const pathName=req.url;
     const {query , pathname}= url.parse(req.url,true);
+
+    //overview 
     if(pathname==='/' || pathname==='/overview') {
         res.writeHead(200,{
             'Content-type' :'text/html'
@@ -81,6 +71,7 @@ const server =http.createServer((req,res)=>{
 
         res.end(out);
     }
+    //product
     else if(pathname==='/product'){
         res.writeHead(200,{
             'Content-type' :'text/html'
@@ -90,12 +81,14 @@ const server =http.createServer((req,res)=>{
         const out = replacetemp(tempProduct,product)
         res.end(out);
     }
+    //api
     else if(pathname === '/api'){
         res.writeHead(200,{
             'Content-type':'application/json'
         })
         res.end(data); 
         }
+    //page not found    
     else{
         res.writeHead(404,{
             'Content-type' : 'text/html',
