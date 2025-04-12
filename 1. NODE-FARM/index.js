@@ -67,8 +67,11 @@ const replacetemp= (temp,prod)=>{
 
 const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."
-    const pathName=req.url;
-    if(pathName==='/' || pathName==='/overview') {
+
+    // console.log(url.parse(req.url,true));
+    // const pathName=req.url;
+    const {query , pathname}= url.parse(req.url,true);
+    if(pathname==='/' || pathname==='/overview') {
         res.writeHead(200,{
             'Content-type' :'text/html'
         })
@@ -78,10 +81,16 @@ const server =http.createServer((req,res)=>{
 
         res.end(out);
     }
-    else if(pathName==='/product'){
-     res.end("This is the product");
+    else if(pathname==='/product'){
+        res.writeHead(200,{
+            'Content-type' :'text/html'
+        })
+
+        const product=dataObj[query.id];
+        const out = replacetemp(tempProduct,product)
+        res.end(out);
     }
-    else if(pathName === '/api'){
+    else if(pathname === '/api'){
         res.writeHead(200,{
             'Content-type':'application/json'
         })
