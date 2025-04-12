@@ -69,6 +69,9 @@ const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."
     const pathName=req.url;
     if(pathName==='/' || pathName==='/overview') {
+        res.writeHead(200,{
+            'Content-type' :'text/html'
+        })
 
         const cardhtml = dataObj.map((el)=> replacetemp(tempCard,el)).join(''); //The join('') part joins all the strings in the array into one big string with no separator (empty string '').
         const out = tempOverview.replace(/{%PRODUCT_CARDS%}/g,cardhtml);
