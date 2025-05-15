@@ -1,0 +1,33 @@
+🔷 Top Part: Dynamic Website (Server-Side Rendered)
+This section shows how traditional dynamic websites work.
+
+Flow:
+
+Database → fetch data.
+Use a template to generate HTML.
+Website is built on the server.
+Browser receives fully built HTML+CSS+JS.
+This process is called Server-Side Rendering.
+
+Example: Websites made using PHP, Django, or EJS with Node.js.
+
+💡 The part circled in red shows: "This course focuses on this" — probably teaching how to build such websites.
+
+
+🔷 Bottom Part: API-Powered Website (Client-Side Rendered)
+This shows a modern approach where the backend and frontend are separated.
+
+Backend:
+
+Database fetches data → sends as JSON via API.
+Frontend (Browser):
+React, Angular, etc. (shown in icons) fetch that JSON.
+Then build the website in the browser using templates.
+So the rendering happens on the client-side (browser).
+
+This is called Client-Side Rendering (CSR).
+
+
+💡 Note:
+The bottom is best for Single Page Applications (SPAs).
+The top is good for SEO-friendly pages like blogs or marketing sites.

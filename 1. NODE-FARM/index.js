@@ -5,6 +5,9 @@ const path = require('path');
 //calling the fs module  "file system module"so that we can read,write etc from the file system  -> require(" ") ->this the the function used for calling the module in node js
 const replacetemp=require('./modules/replacetemp');  //isme starting "./ "se hi hogi which indicate the current directory or folder
 
+const slugify=require("slugify");
+
+
 // const hello="Hello World";
 // console.log(hello);
 
@@ -50,8 +53,8 @@ const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.htm
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');//isse file directly sirf ek hi baar read hogii
 const dataObj = JSON.parse(data);// to convert it into object 
 
-
-
+const slugs=dataObj.map(el => slugify(el.productName,{lower:true}))
+console.log(slugs);
 
 const server =http.createServer((req,res)=>{
     //console.log(req.url);   //routing -> alg page pe jakar url change karna or "User kis page pe gaya hai, aur uske according hum kya response bhejenge."

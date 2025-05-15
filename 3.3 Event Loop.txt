@@ -1,0 +1,27 @@
+🔁 Node.js ka Dil: Event Loop
+Ye image batata hai ki Node.js ka main kaam kaise hota hai — aur uska centre hai Event Loop.
+
+📦 Kya hota hai Event Loop?
+Socho Node.js ek single-threaded system hai — matlab ek waqt mein ek kaam karta hai. Lekin fir bhi ye bahut saare tasks ek saath handle kar leta hai. Kaise? Event Loop ke through!
+
+🔄 Kaise kaam karta hai?
+Events aate hain (jaise HTTP request, timer expire hona, file read hona)
+Event loop unhe pick karta hai
+Callback function run karta hai (jo code likha hota hai jab ye event ho)
+
+🤖 Node.js ke andar kya hota hai:
+Single thread hota hai jo sab kuch manage karta hai
+Saath hi ek Thread Pool hoti hai (libuv ke through) — background me kuch heavy kaam (jaise file system operations) yahan hote hain
+Jab kaam ready ho jata hai, Event Loop us callback ko run karta hai
+
+⚙️ Simple Example:
+🟢 Tumne bola: fs.readFile('data.txt')
+👉 File read hone me time lagta hai
+👉 Ye kaam Thread Pool me chala gaya
+👉 Jab file read ho gayi, Event Loop ne bola: "Kaam ho gaya, ab callback function run karo!"
+
+✅ Side points:
+Node.js asynchronous hai — ye wait nahi karta
+Har kaam ke baad callback function run hota hai
+Event Loop sabko manage karta hai efficiently
+

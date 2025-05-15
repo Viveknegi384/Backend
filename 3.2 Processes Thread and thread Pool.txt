@@ -1,0 +1,54 @@
+🧠 Node.js Ek Line Mein:
+Node.js ek single-threaded environment hai, lekin heavy kaam ko manage karne ke liye background mein multiple threads ka use karta hai (Thread Pool ke through).
+
+--------------------------------------------------------------------------------------------------
+
+🔶 LEFT SIDE: Node.js Process – Single Thread Ka Flow
+
+1. Initialize Program
+Node.js program start hota hai.
+Jaise aap terminal mein node app.js likhte ho.
+
+2. Execute "Top-Level" Code
+Sabse upar likha hua synchronous (seedha) code turant chalaya jata hai.
+Jaise: console.log(), variables define karna, etc.
+
+3. Require Modules
+Jaise require('fs') ya require('http'), Node.js modules ko load karta hai.
+
+4. Register Event Callbacks
+Aapke async kaam jaise fs.readFile() ke sath callback functions register hote hain.
+Matlab, agar file padhi ja rahi hai, toh "file padhne ke baad kya karna hai" — yeh Node yaad rakhta hai.
+
+5. Start Event Loop
+Yahi hai Node.js ka heart 💓
+Event loop baar-baar check karta hai: "Kya koi kaam complete ho gaya? Agar haan, toh uska callback chalaao."
+
+--------------------------------------------------------------------------------------------------
+
+🔷 RIGHT SIDE: Thread Pool (libuv ke through)
+
+🔁 Thread Pool Kya Hai?
+Event loop main thread pe chalta hai.
+Jab koi heavy kaam hota hai (jo time leta hai), toh usse offload (bhej) kar diya jata hai thread pool mein.
+
+🧵 Thread Pool Mein Kya Hota Hai?
+4 threads (ya zyada) hote hain by default.
+Ye background mein heavy tasks complete karte hain.
+
+--------------------------------------------------------------------------------------------------
+
+
+💪 Thread Pool Kya Handle Karta Hai? (Heavy Kaam)
+
+Kaam					Example
+🗂️ File system APIs			fs.readFile()
+🔐 Cryptography				Password hash karna
+📦 Compression				Zipping/unzipping files
+🌐 DNS Lookups				Internet domain resolve karna
+
+--------------------------------------------------------------------------------------------------
+
+✅ Summary (Ek Line Mein):
+Node.js khud single-threaded hai, lekin libuv ke thread pool se help lekar heavy kaam background mein karwata hai, taaki aapka main thread block na ho — aur app fast chale ⚡.
+

@@ -1,0 +1,40 @@
+jab hum browser mein koi webpage access karte hain (jaise www.google.com), toh background mein kaun-kaun se steps hote hain.
+
+🟢 Step 1: DNS Lookup (Naam ko IP address mein badalna)
+Jab hum browser mein URL likhte hain (www.google.com), toh browser pehle DNS server se poochta hai:
+👉 "Is naam ka IP address kya hai?"
+DNS server domain name ko IP address mein convert karta hai (jaise 216.58.211.206).
+
+🟢 Step 2: TCP/IP Socket Connection (Connection Banana)
+Ab jab IP mil gaya, toh client (browser) server ke saath ek TCP connection banata hai.
+Ye ek kind of communication channel hota hai jisme data safe aur reliable tareeke se transfer hota hai.
+
+
+🟢 Step 3: HTTP Request (Browser ki request server ko bhejna)
+Browser ab server ko ek HTTP request bhejta hai.
+
+Ismein 3 cheezen hoti hain:
+✅ Start Line – jaise GET /maps HTTP/1.1 (browser kya chah raha hai)
+✅ Headers – jaise browser ka version, language preference (User-Agent, Accept-Language)
+✅ Body – agar data bhejna ho (mostly POST requests mein hota hai)
+
+🟢 Step 4: HTTP Response (Server se jawaab aana)
+Server HTTP request receive karta hai aur response bhejta hai.
+
+Ismein bhi 3 main parts hote hain:
+✅ Start Line – jaise HTTP/1.1 200 OK (status code batata hai ki sab sahi hai ya nahi)
+✅ Headers – jaise content type, encoding, date
+✅ Body – actual data (HTML, JSON, image, etc.)
+
+🟢 Step 5: index.html load hota hai (aur assets bhi)
+Pehla file jo load hota hai vo hota hai: index.html
+Fir browser is HTML ko scan karta hai aur:
+✅ JavaScript
+✅ CSS
+✅ Images
+...ko bhi load karta hai.
+Ye process har file ke liye repeat hota hai.
+
+
+🔁 In Short:
+Browser → DNS → Server → Request bheji → Response mila → Page load hua (HTML + assets)

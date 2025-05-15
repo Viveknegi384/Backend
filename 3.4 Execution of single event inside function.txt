@@ -1,0 +1,44 @@
+🔄 Ye Diagram kya dikhata hai?
+Ye diagram dikhata hai ki Node.js ka Event Loop kaise kaam karta hai — step by step. Ye ek cycle hai jisme alag-alag callback queues hoti hain. Jab tak kaam bacha hota hai, ye loop chalta rehta hai.
+
+--------------------------------------------------------------------------------------------------------
+
+🔁 Event Loop ka Process 
+✅ Step-by-step Breakdown:
+🔼 Start hota hai event loop
+
+⏰ Expired timer callbacks check karta hai (jaise setTimeout, setInterval)
+Agar koi callback hai to woh run hota hai
+
+📥 I/O polling aur I/O callbacks (jaise file read, HTTP response)
+Ye bhi queue me jo callbacks hain, unhe run karta hai
+
+🟢 setImmediate callbacks run hote hain
+Ye specially tab execute hote hain jab I/O complete ho jata hai
+
+❌ Close callbacks run hote hain
+Ye tab hota hai jab koi resource (jaise socket) band ho raha hota hai
+
+---------------------------------------------------------------------------------------------------
+
+🔁 Fir check hota hai:
+"Kya koi pending timer ya I/O task hai?"
+
+✅ Agar YES — to loop fir se shuru hota hai
+❌ Agar NO — program exit ho jata hai
+
+🧠 Bonus Queues (Side me dikhaye gaye):
+process.nextTick() Queue
+Ye microtask hota hai jo har phase ke beech me run hota hai, sabse Pehle
+
+Other Microtasks Queue
+Isme Promise.resolve().then() jaise microtasks hote hain
+Inka execution bhi har phase ke baad hota hai, lekin nextTick ke baad
+
+🔄 Ek real-life example:
+💡 Socho tumhara ghar ek office hai (Node.js)
+Tumhare paas alag-alag kaam ke liye files hain (callbacks)
+Tum unhe ek ek karke check karte ho — timers, I/O, setImmediate, close
+Har baar kaam karne ke baad dekhte ho: "Aur kuch bacha hai kya?"
+Agar haan, to fir se kaam start
+Agar nahi, to ghar band (program exit)

@@ -1,0 +1,25 @@
+🔷 Static Website (Upar wala part):
+
+Static website ka matlab hota hai ki har page fix hota hai – koi data change nahi hota server ke hisaab se.
+Yeh website HTML, CSS aur JavaScript se bani hoti hai.
+Jab user browser mein open karta hai, toh directly wohi page dikhta hai jaise bana tha.
+JavaScript hone ka matlab yeh nahi ki site dynamic hai. (Isliye likha hai "JavaScript ≠ Dynamic")
+
+🟢 Example: Portfolio website, company ka simple information page, etc.
+
+
+
+🔷 Dynamic Website (Neeche wala part):
+
+Dynamic website mein content database se aata hai.
+Jab user page open karta hai, server pe process hota hai:
+Server database se data get karta hai.
+Template ke through website build hoti hai.
+Phir HTML, CSS, JS banake browser ko bhejta hai.
+Yeh process server-side rendering kehlata hai.
+
+🟢 Example: Facebook, Amazon, Flipkart – jahan content bar bar change hota hai user ke hisaab se.
+
+📌 Note at bottom:
+"Web application = Dynamic website + Functionality"
+Matlab agar dynamic website mein aur extra features (jaise login, cart, etc.) ho jaayein, toh woh web application ban jaata hai.

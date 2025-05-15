@@ -1,0 +1,41 @@
+🔹 1. Our JavaScript Code (Right side)
+
+Yeh wahi code hai jo aap likhte ho — sirf JavaScript mein.
+Jaise console.log("Hello");, file read karna, server banana, etc.
+Lekin JavaScript akeli sab kuch nahi kar sakti — isliye Node.js ke components uski help karte hain.
+
+
+🔹 2. Node.js Ka System (Center Box)
+
+Aapka JavaScript code Node.js ke andar chalta hai. Node.js ke andar do main parts hain:
+
+✅ V8 Engine (Google ka engine):
+Yeh JavaScript code ko machine code mein convert karta hai (jo computer samajhta hai).
+Jaise browser mein chalne wala JavaScript, waise hi yahaan bhi V8 usse fast banata hai.
+
+✅ Libuv Library:
+Yeh handle karta hai:
+
+Event loop: Jo asynchronous (wait karne wale) kaam manage karta hai.
+Thread pool: Jab kuch heavy kaam ho (file read, database access), toh yeh alag threads se kaam karwata hai.
+
+
+🔹 3. C++ Modules (Bottom mein diye gaye):
+
+Jaise:
+http-parser – HTTP requests samajhne ke liye
+OpenSSL – Secure connection ke liye
+zlib – Compress/decompress data ke liye
+c-ares – DNS se baat karne ke liye
+
+Yeh sab low-level kaam karte hain C++ mein, kyunki JavaScript directly yeh kaam nahi kar sakti.
+
+
+🔚 Simple Summary:
+
+Aap sirf JavaScript likhte ho 👨‍💻
+Node.js us JavaScript ko V8 engine se chalata hai ⚙️
+Baaki heavy kaam libuv aur C++ modules sambhalte hain 💪
+
+Isse aapka JavaScript code fast aur asynchronous (non-blocking) ban jata hai.
+
