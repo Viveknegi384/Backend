@@ -31,6 +31,29 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+//Responding to URL pramaters
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params); //print all the parameters define on the URL after tours i.e id (we define also defines it multiple parameters)
+
+  const id = req.params.id * 1; //by multipling any string to 1(i.e. no.) it convert it to no.
+  const tour = tours.find((el) => el.id === id);
+
+  // if (id > tours.length) {
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
 app.post('/api/v1/tours', (req, res) => {
   // console.log(req.body);
   //now to actually make change in api too we do below
