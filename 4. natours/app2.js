@@ -1,7 +1,9 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require("morgan");
 const app = express();
 
+app.use(morgan("dev")); //3rd party middleware used for login
 app.use(express.json()); //middleware
 
 //creating own middleware
