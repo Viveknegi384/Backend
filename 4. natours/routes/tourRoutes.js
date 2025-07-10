@@ -11,11 +11,17 @@ const router = express.Router();
 
 router.param('id',tourController.checkID);
 
+/* 
+chaining multiplemiddleware function
+Create a checkBody middleware
+If not,send back 400 (bad request)
+Add it to the post handler stack
+*/
 
 router
     .route('/')
     .get(tourController.getAllTour)
-    .post(tourController.createTour);
+    .post(tourController.checkBody, tourController.createTour); //here we have implemented two middleware
 
 router
     .route('/:id')
