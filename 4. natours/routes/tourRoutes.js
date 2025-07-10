@@ -13,7 +13,7 @@ router.param('id',tourController.checkID);
 
 /* 
 chaining multiplemiddleware function
-Create a checkBody middleware
+Create a checkBody middleware (means check karsakte h uss POST req ko api or db mai bhjna h ya nahi)
 If not,send back 400 (bad request)
 Add it to the post handler stack
 */
