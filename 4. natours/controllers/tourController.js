@@ -33,30 +33,58 @@ exports.checkBody = (req, res, next) => {
     next();
 };
 */
-exports.getAllTour = (req, res) => {
-    console.log(req.requestTime); //Middleware ne req.requestTime me jo time store kiya tha, wo print karega.
-    res.status(200).json({
-        status: 'success',
-        requestedAt: req.requestTime, // exact time jab request aayi thi
-        // results: tours.length,
-        // data: {
-        //     tours,
-        // },
-    });
+exports.getAllTour = async (req, res) => {
+    try {
+
+        const tours = await Tour.find();
+
+
+        //console.log(req.requestTime); //Middleware ne req.requestTime me jo time store kiya tha, wo print karega.
+        res.status(200).json({
+            status: 'success',
+            //requestedAt: req.requestTime, // exact time jab request aayi thi
+            results: tours.length,
+            data: {
+                tours,
+            },
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
 };
 
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
+    try {
+        const tour = await Tour.findById(req.params.id);
+        //Tour.findOne({_id: req.params.id}) work same as above
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                tour,
+            },
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
+    /* 
     console.log(req.params);
 
     const id = req.params.id * 1;
-    // const tour = tours.find((el) => el.id === id);
-
-    // res.status(200).json({
-    //     status: 'success',
-    //     data: {
-    //         tour,
-    //     },
-    // });
+    const tour = tours.find((el) => el.id === id);
+    res.status(200).json({
+            status: 'success',
+            data: {
+                    tour,
+                },
+            });
+            */
 };
 
 exports.createTour = async (req, res) => {
