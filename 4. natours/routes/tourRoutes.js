@@ -1,5 +1,5 @@
 const express = require("express")
-const tourController = require("./../controllers/tourController") //import karna
+const tourController = require("../controllers/tourController") //import karna
 //instead of above we can also do that by desructuring
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
 //     next();
 // })
 
-router.param('id',tourController.checkID);
+// router.param('id',tourController.checkID); //As we had comment it in controller
 
 /* 
 chaining multiplemiddleware function
@@ -21,7 +21,7 @@ Add it to the post handler stack
 router
     .route('/')
     .get(tourController.getAllTour)
-    .post(tourController.checkBody, tourController.createTour); //here we have implemented two middleware
+    .post(tourController.createTour); //here we have implemented two middleware
 
 router
     .route('/:id')
