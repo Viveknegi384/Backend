@@ -71,6 +71,18 @@ exports.getAllTour = async (req, res) => {
     }else{
       query=query.select('-__v');  // "-" means exclude karna result se
     }
+    
+    // //4) Pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1|| 100;
+    const skip = (page-1) * limit;
+    // page=3& limit =10 ,  1-10 page1, 11-20 page2, 21-30 page3
+    query=query.skip(skip).limit(limit);
+
+    if(req.query.page){  //to handle if we have no documents futher 
+      const numTours = await Tour.countDocuments();
+      if(skip>= numTours) throw new Error('This Page does not exist');
+    }
 
 
     // console.log(req.query,queryObj);
@@ -88,6 +100,7 @@ exports.getAllTour = async (req, res) => {
 
     //EXECUTE QUERY
     const tours= await query;
+
 
     //console.log(req.requestTime); //Middleware ne req.requestTime me jo time store kiya tha, wo print karega.
 
