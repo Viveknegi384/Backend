@@ -64,6 +64,14 @@ exports.getAllTour = async (req, res) => {
       query = query.sort('-createdAt'); //so that newest wale tour top pe ho 
     }
 
+    //3) Field Limiting
+    if(req.query.fields){
+      const fields =req.query.fields.split(',').join(' ');
+      query =query.select(fields); //inculde karna result mai
+    }else{
+      query=query.select('-__v');  // "-" means exclude karna result se
+    }
+
 
     // console.log(req.query,queryObj);
 
