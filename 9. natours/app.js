@@ -15,11 +15,6 @@ app.use(express.static(`${__dirname}/public`));//isme jo file specify kiya h ham
 
 
 app.use((req, res, next) => {
-    console.log('Hello from the middleware 👋');
-    next();
-});
-
-app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
     next();
 });
@@ -28,5 +23,16 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter); //for this routes we want to apply this tourRouter middleware
 app.use('/api/v1/users', userRouter);
 //here above tourRouter and userRouter are the two middleware which are then mount through app.use
+
+
+app.all('*', (req,res,next)=>{
+    res.status(404).json({
+        status: 'fail',
+        message: `Cant't find ${req.originalUrl} on this server!`
+    })
+})
+
+
+
 
 module.exports = app;
