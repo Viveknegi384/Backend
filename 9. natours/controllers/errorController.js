@@ -1,4 +1,12 @@
-const sendErrorDev = (err,res) => {
+const AppError = require("../utils/appError")
+
+const handleCastErrorDB = err => {
+    const message = `Invalid ${err.path}: ${err.value}.`
+    return new AppError(message, 400);
+};
+
+
+const sendErrorDev = (err, res) => {
     res.status(err.statusCode).json({
         status: err.status,
         error: err,
@@ -7,34 +15,38 @@ const sendErrorDev = (err,res) => {
     });
 }
 
-const sendErrorPod = (err, res)=>{
+const sendErrorPod = (err, res) => {
     //Operational, trusted error: send message to client
-    if(err.isOperational){
+    if (err.isOperational) {
         res.status(err.statusCode).json({
             status: err.status,
             message: err.message
         });
-    
-    //Programming or other unknown error: don't leak error details
-    }else{
+
+        //Programming or other unknown error: don't leak error details
+    } else {
         //1) Log error
-        console.error('ERROR 💥',err)
+        console.error('ERROR 💥', err)
 
         //2) Send generic message
         res.status(500).json({
-            status:'error',
+            status: 'error',
             message: 'Something went very wrong!'
         });
     }
 };
 
-module.exports=(err,req,res,next)=>{
-    err.statusCode =err.statusCode || 500;
-    err.status =err.status || 'error';
+module.exports = (err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
 
-    if(process.env.NODE_ENV === 'devlopment'){
+    if (process.env.NODE_ENV === 'devlopment') {
         sendErrorDev(err, res);
-    }else if(process.env.NODE_ENV === 'production'){
-        sendErrorPod(err, res);
+    } else if (process.env.NODE_ENV === 'production') {
+        // let error = { ...err }; //isse kam nahi chalega use mat kar, instead ek proper copy bana:
+        let error = Object.create(err);
+        if (error.name === 'CastError') error = handleCastErrorDB(error)
+
+        sendErrorPod(error, res);
     }
 };
