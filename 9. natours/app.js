@@ -18,8 +18,11 @@ app.use(express.static(`${__dirname}/public`));//isme jo file specify kiya h ham
 
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
+    // console.log(x); //error in postman
     next();
 });
+
+// console.log(x); //error in console handle by uncaught exception
 
 
 app.use('/api/v1/tours', tourRouter); //for this routes we want to apply this tourRouter middleware
