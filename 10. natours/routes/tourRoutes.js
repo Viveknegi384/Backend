@@ -1,7 +1,7 @@
 const express = require("express")
 const tourController = require("../controllers/tourController") //import karna
 //instead of above we can also do that by desructuring
-
+const authController = require("../controllers/authController")
 const router = express.Router();
 
 // router.param('id', (req, res, next, val) => { //new par. val is added
@@ -25,7 +25,7 @@ router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan)
 
 router
     .route('/')
-    .get(tourController.getAllTour)
+    .get(authController.protect, tourController.getAllTour)
     .post(tourController.createTour); //here we have implemented two middleware
 
 router
