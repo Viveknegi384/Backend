@@ -1,4 +1,4 @@
-const {promisify} = require('util');
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -17,7 +17,8 @@ exports.signup = catchAsync(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
-        passwordChangedAt: req.body.passwordChangedAt
+        passwordChangedAt: req.body.passwordChangedAt,
+        role: req.body.role
     });
 
     const token = signToken(newUser._id);
@@ -42,7 +43,7 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ email }).select('+password'); //as password field is set to select false in user schema so we have to explicitly select it here
 
     //test1234 === $2b$12$EaA3njqA9wBNFbhI.5aukubGGHrK6B2JX5CUNquN0XpgmUcMR2oWi
-    if(!user || !(await user.correctPassword(password, user.password))){
+    if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new appError('Incorrect email or password', 401));
     }
 
@@ -77,12 +78,23 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     // 4) check if user changed password after the token was issued
-     if(currentUser.changedPasswordAfter(decoded.iat)) {
-         return next(new appError('User recently changed password! Please log in again.', 401));
-     }
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next(new appError('User recently changed password! Please log in again.', 401));
+    }
 
 
     //GRANT ACCESS TO PROTECTED ROUTE
     req.user = currentUser;
     next();
 });
+
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        //roles is an array ['admin','lead-guide']. role='user'
+        if (!roles.includes(req.user.role)) {
+            return next(new appError('You do not have permission to perform this action', 403));
+        }
+
+        next();
+    };
+};
