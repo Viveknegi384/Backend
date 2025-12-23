@@ -14,6 +14,19 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);  
+    const cookieOptions = {
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true
+    }
+
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    res.cookie('jwt', token, cookieOptions);
+
+    //Remove password from output
+    user.password = undefined;
+
     res.status(statusCode).json({
         status: 'success',
         token,  
@@ -25,15 +38,16 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
     // const newUser = await User.create(req.body); // This is not safe because user can add role as admin in req.body
-    const newUser = await User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        passwordConfirm: req.body.passwordConfirm,
-        passwordChangedAt: req.body.passwordChangedAt,
-        role: req.body.role
-    });
-
+    
+    // const newUser = await User.create({
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     password: req.body.password,
+    //     passwordConfirm: req.body.passwordConfirm,
+    //     passwordChangedAt: req.body.passwordChangedAt,
+    //     role: req.body.role
+    // });
+    const newUser = await User.create(req.body);
     createSendToken(newUser, 201, res);
     
 });
