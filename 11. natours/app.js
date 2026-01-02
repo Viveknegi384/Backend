@@ -10,6 +10,8 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController')
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
+
 
 const app = express();
 
@@ -58,10 +60,11 @@ app.use((req, res, next) => {
 
 // console.log(x); //error in console handle by uncaught exception
 
-
+//3) ROUTES
 app.use('/api/v1/tours', tourRouter); //for this routes we want to apply this tourRouter middleware
 app.use('/api/v1/users', userRouter);
 //here above tourRouter and userRouter are the two middleware which are then mount through app.use
+app.use('/api/v1/reviews', reviewRouter);
 
 
 app.all('*', (req, res, next) => {
