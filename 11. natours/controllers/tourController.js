@@ -38,7 +38,7 @@ exports.getAllTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id).populate('reviews');
 
   if (!tour) { //as NULL value ko false ki hi tarah consider karte h 
     return next(new AppError('No tour found with ID', 404));
