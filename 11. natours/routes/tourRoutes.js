@@ -2,6 +2,7 @@ const express = require("express")
 const tourController = require("../controllers/tourController") //import karna
 //instead of above we can also do that by desructuring
 const authController = require("../controllers/authController")
+const reviewController = require("../controllers/reviewController")
 const router = express.Router();
 
 // router.param('id', (req, res, next, val) => { //new par. val is added
@@ -33,5 +34,12 @@ router
     .get(tourController.getTour)
     .patch(tourController.updateTour)
     .delete(authController.protect, authController.restrictTo('admin', 'lead-guide'), tourController.deleteTour);
+
+
+router.route('/:tourId/reviews').post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.createReview
+);
 
 module.exports = router;
