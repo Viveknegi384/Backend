@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
-const appError = require('../utils/appError');
+const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -26,7 +27,7 @@ exports.updateMe =catchAsync(async (req, res, next) => {
 
     //1) Create error if user POSTs password data
     if (req.body.password || req.body.passwordConfirm) {
-        return next(new appError('This route is not for password updates. Please use /updateMyPassword.', 400));
+        return next(new AppError('This route is not for password updates. Please use /updateMyPassword.', 400));
     }
 
     //2) Filtered out unwanted fields names that are not allowed to be updated
@@ -74,10 +75,5 @@ exports.updateUser = (req, res) => {
         message: "This route is not yet defined!"
     })
 }
-exports.deleteUser = (req, res) => {
-    res.status(500).json({   //500->internal server error
-        status: "error",
-        message: "This route is not yet defined!"
-    })
-}
+exports.deleteUser = factory.deleteOne(User);
 
