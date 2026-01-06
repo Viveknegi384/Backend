@@ -16,7 +16,7 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
 
 });
 
-exports.updateOne = Model => catchAsync(async (req, res, next) =>{
+exports.updateOne = Model => catchAsync(async (req, res, next) => {
   const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -50,7 +50,7 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
 exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
   let query = Model.findById(req.params.id);
   if (popOptions) query = query.populate(popOptions);
-  
+
   const doc = await query;
 
   if (!doc) {
@@ -70,17 +70,18 @@ exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
 exports.getAll = Model => catchAsync(async (req, res, next) => {
   // To allow for nested GET reviews on tour (hack)
   let filter = {};
-  if(req.params.tourId) filter = { tour: req.params.tourId };
+  if (req.params.tourId) filter = { tour: req.params.tourId };
 
   const features = new APIfeatures(Model.find(filter), req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate();
+  // const doc = await features.query.explain();
   const doc = await features.query;
 
 
-    res.status(200).json({
+  res.status(200).json({
     status: 'success',
     //requestedAt: req.requestTime, // exact time jab request aayi thi
     results: doc.length,
