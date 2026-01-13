@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -14,8 +15,13 @@ const reviewRouter = require("./routes/reviewRoutes");
 
 
 const app = express();
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 //1) GLOBAL MIDDLEWARES
+//serving static file
+app.use(express.static(path.join(__dirname, 'public')));
+
 //set security http headers
 app.use(helmet());//set security http headers
 
@@ -47,8 +53,6 @@ app.use(hpp({
 }
 ));
 
-//serving static file
-app.use(express.static(`${__dirname}/public`));//isme jo file specify kiya h hamne uss file li kisi bhi file ko directly url pe publish karna without going thoughout the routes done by this method
 
 //test middleware
 app.use((req, res, next) => {
@@ -61,6 +65,11 @@ app.use((req, res, next) => {
 // console.log(x); //error in console handle by uncaught exception
 
 //3) ROUTES
+app.get('/', (req, res) => {
+    res.status(200).render('base', {
+        
+    });
+});
 app.use('/api/v1/tours', tourRouter); //for this routes we want to apply this tourRouter middleware
 app.use('/api/v1/users', userRouter);
 //here above tourRouter and userRouter are the two middleware which are then mount through app.use
