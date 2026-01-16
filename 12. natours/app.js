@@ -23,7 +23,38 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //set security http headers
-app.use(helmet());//set security http headers
+// app.use(helmet());//set security http headers
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'https://unpkg.com'],
+            styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+            imgSrc: [
+                "'self'",
+                'data:',
+                'blob:',
+                'https://unpkg.com',
+                'https://*.tile.openstreetmap.org',
+                'https://cartodb-basemaps-a.global.ssl.fastly.net',
+                'https://cartodb-basemaps-b.global.ssl.fastly.net',
+                'https://cartodb-basemaps-c.global.ssl.fastly.net',
+                'https://cartodb-basemaps-d.global.ssl.fastly.net'
+            ],
+            connectSrc: [
+                "'self'",
+                'https://unpkg.com',
+                'https://*.tile.openstreetmap.org',
+                'https://cartodb-basemaps-a.global.ssl.fastly.net',
+                'https://cartodb-basemaps-b.global.ssl.fastly.net',
+                'https://cartodb-basemaps-c.global.ssl.fastly.net',
+                'https://cartodb-basemaps-d.global.ssl.fastly.net'
+            ]
+        }
+    })
+);
+
 
 //development logging
 if (process.env.NODE_ENV === 'devlopment') {
