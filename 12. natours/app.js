@@ -2,10 +2,11 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController')
@@ -24,36 +25,39 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //set security http headers
 // app.use(helmet());//set security http headers
-app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", 'https://unpkg.com'],
-            styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com'],
-            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-            imgSrc: [
-                "'self'",
-                'data:',
-                'blob:',
-                'https://unpkg.com',
-                'https://*.tile.openstreetmap.org',
-                'https://cartodb-basemaps-a.global.ssl.fastly.net',
-                'https://cartodb-basemaps-b.global.ssl.fastly.net',
-                'https://cartodb-basemaps-c.global.ssl.fastly.net',
-                'https://cartodb-basemaps-d.global.ssl.fastly.net'
-            ],
-            connectSrc: [
-                "'self'",
-                'https://unpkg.com',
-                'https://*.tile.openstreetmap.org',
-                'https://cartodb-basemaps-a.global.ssl.fastly.net',
-                'https://cartodb-basemaps-b.global.ssl.fastly.net',
-                'https://cartodb-basemaps-c.global.ssl.fastly.net',
-                'https://cartodb-basemaps-d.global.ssl.fastly.net'
-            ]
-        }
-    })
-);
+// app.use(
+//     helmet.contentSecurityPolicy({
+//         directives: {
+//             defaultSrc: ["'self'"],
+//             scriptSrc: ["'self'", 'https://unpkg.com'],
+//             scriptSrcElem: ["'self'", 'https://unpkg.com', 'https://cdnjs.cloudflare.com'],
+//             styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com', "'unsafe-inline'"],
+//             fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+//             imgSrc: [
+//                 "'self'",
+//                 'data:',
+//                 'blob:',
+//                 'https://unpkg.com',
+//                 'https://*.tile.openstreetmap.org',
+//                 'https://cartodb-basemaps-a.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-b.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-c.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-d.global.ssl.fastly.net'
+//             ],
+//             connectSrc: [
+//                 "'self'",
+//                 'https://unpkg.com',
+//                 'https://*.tile.openstreetmap.org',
+//                 'https://cartodb-basemaps-a.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-b.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-c.global.ssl.fastly.net',
+//                 'https://cartodb-basemaps-d.global.ssl.fastly.net'
+//             ]
+//         }
+//     })
+// );
+
+//NOTE: Above helmet code is commented to allow leaflet map to work properly without any Csp error and uske aage ke vedios me jaise login etc 
 
 
 //development logging
@@ -71,6 +75,7 @@ app.use('/api', limiter); //to apply this limiter only on routes which start wit
 
 //body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); //body size is limited to 10kb
+app.use(cookieParser());
 
 //Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -90,6 +95,7 @@ app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
     // console.log(x); //error in postman
     // console.log(req.headers);
+    console.log(req.cookies);
     next();
 });
 
