@@ -13,7 +13,7 @@ const signToken = id => {
 }
 
 const createSendToken = (user, statusCode, res) => {
-    const token = signToken(user._id);  
+    const token = signToken(user._id);
     const cookieOptions = {
         expires: new Date(
             Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -29,7 +29,7 @@ const createSendToken = (user, statusCode, res) => {
 
     res.status(statusCode).json({
         status: 'success',
-        token,  
+        token,
         data: {
             user
         }
@@ -38,7 +38,7 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
     // const newUser = await User.create(req.body); // This is not safe because user can add role as admin in req.body
-    
+
     // const newUser = await User.create({
     //     name: req.body.name,
     //     email: req.body.email,
@@ -49,7 +49,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     // });
     const newUser = await User.create(req.body);
     createSendToken(newUser, 201, res);
-    
+
 });
 
 exports.login = async (req, res, next) => {
@@ -108,6 +108,32 @@ exports.protect = catchAsync(async (req, res, next) => {
     next();
 });
 
+// Only for rendered pages, no errors!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+    if (req.cookies.jwt) {
+        //1) verify token
+        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);    
+
+        //2) Check if user still exists
+        const currentUser = await User.findById(decoded.id);
+        if (!currentUser) {
+            return next();
+        }
+
+        // 3) check if user changed password after the token was issued
+        if (currentUser.changedPasswordAfter(decoded.iat)) {
+            return next();
+        }
+    
+        // THERE IS A LOGGED IN USER
+        res.locals.user = currentUser;
+        return next();
+    }
+    next();
+});
+
+
+
 exports.restrictTo = (...roles) => {
     return (req, res, next) => {
         //roles is an array ['admin','lead-guide']. role='user'
@@ -143,9 +169,9 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
         });
 
         res.status(200).json({
-        status: 'success',
-        message: 'Token sent to email!'
-    });
+            status: 'success',
+            message: 'Token sent to email!'
+        });
 
     } catch (err) {
         user.passwordResetToken = undefined;
@@ -167,7 +193,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     if (!user) {
         return next(new appError('Token is invalid or has expired', 400));
     }
- 
+
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     user.passwordResetToken = undefined;
@@ -195,7 +221,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
     // User.findByIdAndUpdate will NOT work as intended!
-    
+
 
     //4) Log user in, send JWT
     createSendToken(user, 200, res);
