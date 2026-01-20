@@ -2,11 +2,12 @@
 import '@babel/polyfill';
 import { displayMap } from './leaflet.js';
 import { login } from './login.js';
-
+import { logout } from './login.js';
 
 // DOM Elements
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form');
+const logoutBtn = document.querySelector('.nav__el--logout');
 
 //DELEGATION
 if (mapBox) {
@@ -21,3 +22,6 @@ if (loginForm)
         const password = document.getElementById('password').value;
         login(email, password);
     });
+
+if (logoutBtn)
+    logoutBtn.addEventListener('click', logout);
