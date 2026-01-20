@@ -1,12 +1,6 @@
 /* eslint-disable */
-
-console.log('Hello from client side');
-const mapBox = document.getElementById('map');
-
-if (mapBox) {
-    const locations = JSON.parse(mapBox.dataset.locations);
-
-    const map = L.map('map',{
+export const displayMap = locations => {
+    const map = L.map('map', {
         scrollWheelZoom: false,
         TouchZoom: false,
         boxZoom: false,
@@ -22,7 +16,7 @@ if (mapBox) {
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             subdomains: 'abcd',
             maxZoom: 19,
-            
+
         }
     ).addTo(map);
 
