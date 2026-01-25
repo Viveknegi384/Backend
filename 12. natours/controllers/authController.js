@@ -121,27 +121,27 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = async (req, res, next) => {
     if (req.cookies.jwt) {
         try {
-        //1) verify token
-        const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);    
+            //1) verify token
+            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
 
-        //2) Check if user still exists
-        const currentUser = await User.findById(decoded.id);
-        if (!currentUser) {
+            //2) Check if user still exists
+            const currentUser = await User.findById(decoded.id);
+            if (!currentUser) {
+                return next();
+            }
+
+            // 3) check if user changed password after the token was issued
+            if (currentUser.changedPasswordAfter(decoded.iat)) {
+                return next();
+            }
+
+            // THERE IS A LOGGED IN USER
+            res.locals.user = currentUser;
+            return next();
+        } catch (err) {
             return next();
         }
-
-        // 3) check if user changed password after the token was issued
-        if (currentUser.changedPasswordAfter(decoded.iat)) {
-            return next();
-        }
-    
-        // THERE IS A LOGGED IN USER
-        res.locals.user = currentUser;
-        return next();
-    } catch (err) {
-        return next();
     }
-}
     next();
 };
 
@@ -226,7 +226,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     const user = await User.findById(req.user.id).select('+password');
 
     //2) Check if POSTed current password is correct
-    if (!(await user.correctPassword(req.body.passwordCurrentf, user.password))) {
+    if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
         return next(new appError('Your current password is wrong.', 401));
     }
     //3) If so, update password
