@@ -75,6 +75,7 @@ app.use('/api', limiter); //to apply this limiter only on routes which start wit
 
 //body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })); //body size is limited to 10kb
+app.use(express.urlencoded({extended: true, limit: '10kb'}));
 app.use(cookieParser());
 
 //Data sanitization against NoSQL query injection
