@@ -29,7 +29,7 @@ module.exports = class Email {
   async send(template, subject) {
     //1) Render HTML based on a pug template
     const html = pug.renderFile(
-      `${__dirname}/../views/emails/${template}.pug`,
+      `${__dirname}/../views/email/${template}.pug`,
       {
         firstName: this.firstName,
         url: this.url,
@@ -54,4 +54,12 @@ module.exports = class Email {
   async sendWelcome() {
     await this.send('welcome', 'Welcome to the Natours Family!');
   }
+
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token (valid for only 10 minutes)',
+    );
+  }
+
 };
