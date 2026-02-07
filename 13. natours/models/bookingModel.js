@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
-const { patch, path } = require('../app');
 
-
-const bookingSchema = new moongoose.Schema({
+const bookingSchema = new mongoose.Schema({
     tour: {
         type: mongoose.Schema.ObjectId,
         ref: 'Tour',
